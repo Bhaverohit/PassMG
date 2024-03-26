@@ -1,8 +1,19 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const Manager = () => {
     const ref = useRef()
     const [form, setForm] = useState({ site: "", username: "", password: "" })
+    const [passwordArray, setPasswordArray] = useState([]);
+
+
+
+    useEffect(() => {
+        let passwords = localStorage.getItem("password")
+
+        if (passwords) {
+            setPasswordArray(JSON.parse(passwords));
+        }
+    }, []);
 
     const showPassword = () => {
         if (ref.current.src.includes("src/assets/eye.png")) {
@@ -14,7 +25,9 @@ const Manager = () => {
     }
 
     const savePassword = () => {
-        console.log(form);
+        setPasswordArray([...passwordArray, form]);
+        localStorage.setItem("password", JSON.stringify([...passwordArray, form]));
+        console.log(passwordArray);
     }
 
     const handleChange = (e) => {
@@ -59,6 +72,32 @@ const Manager = () => {
                         Add Password
                     </button>
 
+                </div>
+
+
+                <div className="passwords">
+                    <h2 className='text-center text-2xl mt-5 mb-4 text-green-700 font-bold'>Your Passwords</h2>
+                    {passwordArray.length === 0 && <div className='text-center'>No Passwords To Show</div>}
+                    {passwordArray.length !== 0 &&
+                        <table className='table-auto w-full text-center rounded-xl overflow-hidden'>
+                            <thead className='bg-green-800 text-white'>
+                                <tr className='font-bold'>
+                                    <th className='py-1.5'>Website</th>
+                                    <th className='py-1.5'>Username</th>
+                                    <th className='py-1.5'>Password</th>
+                                </tr>
+                            </thead>
+                            <tbody className='bg-green-100'>
+                                {passwordArray.map((item, index) => {
+                                    return <tr key={index}>
+                                        <td className='py-1.5 text-green-950 max-w-12 border border-white'>{item.site}</td>
+                                        <td className='py-1.5 text-green-950 max-w-12 border border-white'>{item.username}</td>
+                                        <td className='py-1.5 text-green-950 max-w-12 border border-white'>{item.password}</td>
+                                    </tr>
+                                })}
+                            </tbody>
+                        </table>
+                    }
                 </div>
 
             </div>
