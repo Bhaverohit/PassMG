@@ -4,7 +4,7 @@ const Manager = () => {
     const ref = useRef()
     const [form, setForm] = useState({ site: "", username: "", password: "" })
     const [passwordArray, setPasswordArray] = useState([]);
-
+    const passRef = useRef();
 
 
     useEffect(() => {
@@ -16,11 +16,13 @@ const Manager = () => {
     }, []);
 
     const showPassword = () => {
+        passRef.current.type = "text"
         if (ref.current.src.includes("src/assets/eye.png")) {
             ref.current.src = "src/assets/eye_hidden.png"
-
+            passRef.current.type = "text"
         } else {
             ref.current.src = "src/assets/eye.png"
+            passRef.current.type = "password"
         }
     }
 
@@ -57,7 +59,7 @@ const Manager = () => {
                         <input placeholder='Enter Username' onChange={handleChange} value={form.username} type="text" className='rounded-full border border-green-500 w-full py-1 p-4' id='username' name='username' />
                         <div className="relative">
 
-                            <input placeholder='Enter Password' onChange={handleChange} value={form.password} type="text" className='rounded-full border border-green-500 w-full py-1 p-4' id='password' name='password' />
+                            <input ref={passRef} placeholder='Enter Password' onChange={handleChange} value={form.password} type="password" className='rounded-full border border-green-500 w-full py-1 p-4' id='password' name='password' />
                             <span className='absolute right-[4px] top-[3px] cursor-pointer' onClick={showPassword}>
                                 <img ref={ref} className='p-1' width={30} src="src/assets/eye.png" alt="eye" />
                             </span>
@@ -76,7 +78,9 @@ const Manager = () => {
 
 
                 <div className="passwords">
+
                     <h2 className='text-center text-2xl mt-5 mb-4 text-green-700 font-bold'>Your Passwords</h2>
+
                     {passwordArray.length === 0 && <div className='text-center'>No Passwords To Show</div>}
                     {passwordArray.length !== 0 &&
                         <table className='table-auto w-full text-center rounded-xl overflow-hidden'>
