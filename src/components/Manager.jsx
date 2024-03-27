@@ -1,11 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Manager = () => {
     const ref = useRef()
     const [form, setForm] = useState({ site: "", username: "", password: "" })
     const [passwordArray, setPasswordArray] = useState([]);
     const passRef = useRef();
-
 
     useEffect(() => {
         let passwords = localStorage.getItem("password")
@@ -37,10 +39,41 @@ const Manager = () => {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
 
+    const copyText = (text, data) => {
+        toast(data + ' copied to clipboard!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+        navigator.clipboard.writeText(text)
+    }
 
 
     return (
         <>
+
+            {/* On this website do the open source contribution */}
+            {/* Replace this library with react hot toast */}
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light" />
+            {/* Same as */}
+            <ToastContainer />
+
+
             <div className="absolute inset-0 -z-10 h-full w-full bg-green-50 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"><div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-green-900 opacity-20 blur-[100px]"></div></div>
 
             <div className="my_container">
@@ -94,9 +127,30 @@ const Manager = () => {
                             <tbody className='bg-green-100'>
                                 {passwordArray.map((item, index) => {
                                     return <tr key={index}>
-                                        <td className='py-1.5 text-green-950 max-w-12 border border-white'><a href={item.site} target='_blank'>{item.site}</a></td>
-                                        <td className='py-1.5 text-green-950 max-w-12 border border-white'>{item.username}</td>
-                                        <td className='py-1.5 text-green-950 max-w-12 border border-white'>{item.password}</td>
+                                        <td className='py-1.5 text-green-950 border border-white text-center'>
+                                            <div className='flex items-center justify-center gap-5'>
+                                                <a href={item.site} target='_blank'>{item.site}</a>
+                                                <div className='size-7 hover:cursor-pointer p-1' onClick={() => copyText(item.site, "Website")}>
+                                                    <img src="src/assets/copy.png" alt="copy" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className='py-1.5 text-green-950 border border-white text-center'>
+                                            <div className='flex items-center justify-center gap-5'>
+                                                {item.username}
+                                                <div className='size-7 hover:cursor-pointer p-1' onClick={() => copyText(item.username, "Username")}>
+                                                    <img src="src/assets/copy.png" alt="copy" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className='py-1.5 text-green-950 border border-white text-center'>
+                                            <div className='flex items-center justify-center gap-5'>
+                                                {item.password}
+                                                <div className='size-7 hover:cursor-pointer p-1' onClick={() => copyText(item.password, "Password")}>
+                                                    <img src="src/assets/copy.png" alt="copy" />
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>
                                 })}
                             </tbody>
